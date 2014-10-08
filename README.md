@@ -1,4 +1,0 @@
-webzine
-=======
-
-webzine service base

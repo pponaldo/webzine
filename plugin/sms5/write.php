@@ -1,5 +1,5 @@
 <?php
-if (!defined('_WONDER_')) exit;
+if (!defined('_GNUBOARD_')) exit;
 
 if( !$sms5['bo_skin'] ){
     $sms5['bo_skin'] = "basic";

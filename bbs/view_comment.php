@@ -119,7 +119,6 @@ else
     $comment_min = (int)$board['bo_comment_min'];
     $comment_max = (int)$board['bo_comment_max'];
 }
-
 include_once($board_skin_path.'/view_comment.skin.php');
 
 if (!$member['mb_id']) // 비회원일 경우에만

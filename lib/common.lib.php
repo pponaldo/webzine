@@ -54,21 +54,27 @@ function get_paging($write_pages, $cur_page, $total_page, $url, $add="")
         return "";
 }
 
-// 페이징 코드의 <div><span> 태그 다음에 코드를 삽입
+// 페이징 코드의 <nav><span> 태그 다음에 코드를 삽입
 function page_insertbefore($paging_html, $insert_html)
 {
-    if ($paging_html) {
-        return preg_replace("/^(<div[^>]+><span[^>]+>)/", '$1'.$insert_html, $paging_html);
-    }
+    if(!$paging_html)
+        $paging_html = '<nav class="pg_wrap"><span class="pg"></span></nav>';
+
+    return preg_replace("/^(<nav[^>]+><span[^>]+>)/", '$1'.$insert_html.PHP_EOL, $paging_html);
 }
 
-// 페이징 코드의 </span></div> 태그 이전에 코드를 삽입
+// 페이징 코드의 </span></nav> 태그 이전에 코드를 삽입
 function page_insertafter($paging_html, $insert_html)
 {
-    if ($paging_html) {
-        //return preg_replace("/(<\/span><\/div>)$/", $insert_html.'$1', $paging_html);
-        return preg_replace("#(</span></div>)$#", $insert_html.'$1', $paging_html);
-    }
+    if(!$paging_html)
+        $paging_html = '<nav class="pg_wrap"><span class="pg"></span></nav>';
+
+    if(preg_match("#".PHP_EOL."</span></nav>#", $paging_html))
+        $php_eol = '';
+    else
+        $php_eol = PHP_EOL;
+
+    return preg_replace("#(</span></nav>)$#", $php_eol.$insert_html.'$1', $paging_html);
 }
 
 // 변수 또는 배열의 이름과 값을 얻어냄. print_r() 함수의 변형
@@ -2750,6 +2756,30 @@ function member_delete($mb_id)
     // 회원자료는 정보만 없앤 후 아이디는 보관하여 다른 사람이 사용하지 못하도록 함 : 061025
     $sql = " update {$g5['member_table']} set mb_password = '', mb_level = 1, mb_email = '', mb_homepage = '', mb_tel = '', mb_hp = '', mb_zip1 = '', mb_zip2 = '', mb_addr1 = '', mb_addr2 = '', mb_birth = '', mb_sex = '', mb_signature = '', mb_memo = '".date('Ymd', G5_SERVER_TIME)." 삭제함\n{$mb['mb_memo']}', mb_leave_date = '".date('Ymd', G5_SERVER_TIME)."' where mb_id = '{$mb_id}' ";
     sql_query($sql);
+
+    // 포인트 테이블에서 삭제
+    sql_query(" delete from {$g5['point_table']} where mb_id = '$mb_id' ");
+
+    // 그룹접근가능 삭제
+    sql_query(" delete from {$g5['group_member_table']} where mb_id = '$mb_id' ");
+
+    // 쪽지 삭제
+    sql_query(" delete from {$g5['memo_table']} where me_recv_mb_id = '$mb_id' or me_send_mb_id = '$mb_id' ");
+
+    // 스크랩 삭제
+    sql_query(" delete from {$g5['scrap_table']} where mb_id = '$mb_id' ");
+
+    // 관리권한 삭제
+    sql_query(" delete from {$g5['auth_table']} where mb_id = '$mb_id' ");
+
+    // 그룹관리자인 경우 그룹관리자를 공백으로
+    sql_query(" update {$g5['group_table']} set gr_admin = '' where gr_admin = '$mb_id' ");
+
+    // 게시판관리자인 경우 게시판관리자를 공백으로
+    sql_query(" update {$g5['board_table']} set bo_admin = '' where bo_admin = '$mb_id' ");
+
+    // 아이콘 삭제
+    @unlink(G5_DATA_PATH.'/member/'.substr($mb_id,0,2).'/'.$mb_id.'.gif');
 }
 
 // 이메일 주소 추출

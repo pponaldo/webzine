@@ -1,5 +1,5 @@
 <?php
-if (!defined('_WONDER_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 function editor_html($id, $content, $is_dhtml_editor=true)
 {

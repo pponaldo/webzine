@@ -14,6 +14,11 @@ if (!defined('_WONDER_')) exit; // 개별 페이지 접근 불가
     <?php echo popular('basic'); // 인기검색어 ?>
     <?php echo visit('basic'); // 방문자수 ?>
     <div id="ft_copy">
+        <div id="ft_company">
+            <a href="<?php echo G5_BBS_URL; ?>/content.php?co_id=company">원더풀진?</a>
+            <a href="<?php echo G5_BBS_URL; ?>/content.php?co_id=privacy">개인정보취급방침</a>
+            <a href="<?php echo G5_BBS_URL; ?>/content.php?co_id=provision">서비스이용약관</a>
+        </div>
         Copyright &copy; <b>WONDERFULZINE.NET.</b> All rights reserved.<br>
         <a href="#">상단으로</a>
     </div>

@@ -1,5 +1,5 @@
 <?php
-if (!defined('_WONDER_')) exit; // 개별 페이지 접근 불가
+if (!defined('_GNUBOARD_')) exit; // 개별 페이지 접근 불가
 
 if(!$config['cf_cert_use'] || $config['cf_cert_hp'] != 'kcb')
     alert('기본환경설정에서 KCB 휴대폰본인확인 서비스로 설정해 주십시오.');
